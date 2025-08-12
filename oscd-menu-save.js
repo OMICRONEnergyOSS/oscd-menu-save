@@ -1,4 +1,4 @@
-export default class SaveProjectPlugin extends HTMLElement {
+class SaveProjectPlugin extends HTMLElement {
     async run() {
         if (this.doc) {
             let documentAsString = new XMLSerializer().serializeToString(this.doc);
@@ -24,4 +24,6 @@ export default class SaveProjectPlugin extends HTMLElement {
         }
     }
 }
+
+export { SaveProjectPlugin as default };
 //# sourceMappingURL=oscd-menu-save.js.map
