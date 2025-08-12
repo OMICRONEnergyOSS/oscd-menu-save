@@ -11337,6 +11337,17 @@ function loadSourcedPlugins(plugins) {
         .filter((plugin) => plugin !== undefined);
 }
 
+function __variableDynamicURLRuntime0__(path) {
+  switch (path) {
+    case './locales/de.js': return new URL(new URL('assets/de-BadDkCzR.js', import.meta.url).href);
+    default: return new Promise(function(resolve, reject) {
+      (typeof queueMicrotask === 'function' ? queueMicrotask : setTimeout)(
+        reject.bind(null, new Error("Unknown variable dynamic new URL statement: " + path))
+      );
+    })
+   }
+ }
+
 var _OpenSCD_plugins, _OpenSCD_actions;
 const _customElementsDefine = window.customElements.define;
 window.customElements.define = (name, cl, conf) => {
@@ -11347,7 +11358,7 @@ window.customElements.define = (name, cl, conf) => {
 const { getLocale, setLocale } = configureLocalization({
     sourceLocale,
     targetLocales,
-    loadLocale: locale => import(new URL(`./locales/${locale}.js`, import.meta.url).href),
+    loadLocale: locale => import(__variableDynamicURLRuntime0__(`./locales/${locale}.js`).href),
 });
 function renderActionItem(control, slot = 'actionItems') {
     return x `<oscd-filled-icon-button
