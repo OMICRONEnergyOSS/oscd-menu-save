@@ -1,5 +1,5 @@
-import { expect, fixture, html, oneEvent } from '@open-wc/testing';
-import { SinonSpy, spy } from 'sinon';
+import { expect, fixture, html } from '@open-wc/testing';
+import { spy } from 'sinon';
 
 import OscdMenuSave from './oscd-menu-save.js';
 import sinon from 'sinon';
