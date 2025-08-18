@@ -12044,74 +12044,37 @@ class OscdBackgroundEditV1 extends HTMLElement {
     }
 }
 
-class OscdTemplateMenu extends ScopedElementsMixin(i$3) {
+class SaveProjectPlugin extends HTMLElement {
     async run() {
-        // Implement the logic for the run method
-        if (this.docName) {
-            console.log(`Running with document: ${this.docName}`);
+        if (this.doc) {
+            let documentAsString = new XMLSerializer().serializeToString(this.doc);
+            // Add XML declaration/prolog if it's been stripped
+            // TODO: This can be removed once the improved OpenSCD core edit API is present
+            documentAsString = documentAsString.startsWith('<?xml')
+                ? documentAsString
+                : '<?xml version="1.0" encoding="UTF-8"?>' + '\n' + documentAsString;
+            const blob = new Blob([documentAsString], {
+                type: 'application/xml',
+            });
+            const a = document.createElement('a');
+            a.download = this.docName;
+            a.href = URL.createObjectURL(blob);
+            a.dataset.downloadurl = ['application/xml', a.download, a.href].join(':');
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(function () {
+                URL.revokeObjectURL(a.href);
+            }, 5000);
         }
     }
-    render() {
-        /* Anything rendered in here for a Menu plugin, will be hidden
-         * Typically you would render dialogs here, where the run method
-         * may set the dialogs state to open.
-         */
-        return x `
-      <h1>OSCD Template Menu</h1>
-      <p>
-        Welcome to the OSCD Template Menu. Currently selected Document is:
-        ${this.docName}.
-      </p>
-    `;
-    }
 }
-OscdTemplateMenu.scopedElements = {
-/*
- * add any web-components this component will reference here.
- * E.g.
- * "oscd-button": OscdButton,
- *
- * Important!
- * Importing the web-component class should NOT result in the web-component being registered with the global customElements registry.
- * Otherwise it will fail to render at all. You'll only get an empty tag, no web component.
- */
-};
-OscdTemplateMenu.styles = i$6 `
-    :host {
-      /* Ideal place to set CSS to the root of the component */
-      background-color: var(--oscd-something);
-    }
-
-    * {
-      /* Ideal place to set CSS variables, which should be applied to all elements.
-       * typically done to set Material Component theme variables.
-      */
-      --md-something: var(--oscd-something);
-    }
-  `;
-__decorate([
-    n$3({ type: Object })
-], OscdTemplateMenu.prototype, "editor", void 0);
-__decorate([
-    n$3({ type: Object })
-], OscdTemplateMenu.prototype, "docs", void 0);
-__decorate([
-    n$3({ type: Object })
-], OscdTemplateMenu.prototype, "doc", void 0);
-__decorate([
-    n$3({ type: String })
-], OscdTemplateMenu.prototype, "docName", void 0);
-__decorate([
-    n$3({ attribute: false })
-], OscdTemplateMenu.prototype, "docVersion", void 0);
-__decorate([
-    n$3({ type: String })
-], OscdTemplateMenu.prototype, "locale", void 0);
 
 customElements.define('oscd-menu-open', OscdMenuOpen);
 customElements.define('oscd-background-editv1', OscdBackgroundEditV1);
 
-customElements.define('oscd-template-menu', OscdTemplateMenu);
+customElements.define('oscd-menu-save', SaveProjectPlugin);
 
 const plugins = {
   menu: [
@@ -12126,7 +12089,7 @@ const plugins = {
       translations: { de: 'Datei speichern' },
       icon: 'save',
       requireDoc: true,
-      tagName: 'oscd-template-menu',
+      tagName: 'oscd-menu-save',
     },
   ],
   editor: [],
